@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>እቁብ-መዝገብ (EqubLedger) — Transparent Equb Pool, Fairness &amp; Schedule Engine</title>
+  <meta name="description" content="Free mobile-first Equb (እቁብ) pool calculator, inflation-adjusted fairness index, and WhatsApp-ready payout schedule for Ethiopian youth & diaspora groups." />
+  <style>
+    :root { --emerald:#064E3B; --gold:#D97706; --bg:#F8FAFC; --card:#FFFFFF; --ink:#0F172A; --muted:#475569; --border:#E2E8F0; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Ethiopic",sans-serif; background:var(--bg); color:var(--ink); line-height:1.5; font-variant-numeric:tabular-nums; }
+    .top { background:var(--emerald); color:#ECFDF5; padding:12px 16px; border-bottom:3px solid var(--gold); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+    .brand { font-weight:800; font-size:1.05rem; }
+    .langs { display:flex; gap:4px; }
+    .langs button { border:none; background:rgba(255,255,255,0.14); color:#D1FAE5; padding:5px 10px; border-radius:999px; font-weight:700; cursor:pointer; font-size:0.8rem; }
+    .langs button.active { background:#FFF; color:var(--emerald); }
+    .wrap { max-width:940px; margin:0 auto; padding:18px 16px 48px; }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:18px; margin-bottom:16px; }
+    h1 { margin:0 0 6px; font-size:1.55rem; color:var(--emerald); }
+    .sub { margin:0; color:var(--muted); font-size:0.92rem; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px; margin-top:14px; }
+    label { display:block; font-size:0.78rem; font-weight:700; text-transform:uppercase; color:var(--muted); margin-bottom:5px; }
+    input, select { width:100%; padding:10px; border:1px solid #CBD5E1; border-radius:8px; font-size:0.95rem; font-weight:600; }
+    .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin:14px 0; }
+    .kpi { background:#ECFDF5; border:1px solid #A7F3D0; border-radius:10px; padding:12px; }
+    .kpi.warn { background:#FFFBEB; border-color:#FDE68A; }
+    .kpi-k { font-size:0.75rem; font-weight:700; color:var(--muted); text-transform:uppercase; }
+    .kpi-v { font-size:1.25rem; font-weight:900; color:var(--emerald); margin-top:2px; }
+    .kpi.warn .kpi-v { color:#92400E; }
+    table { width:100%; border-collapse:collapse; font-size:0.86rem; margin-top:10px; }
+    th, td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--border); }
+    th { background:#F1F5F9; font-weight:700; }
+    .btns { display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; }
+    .btn { border:none; border-radius:8px; padding:10px 16px; font-weight:800; font-size:0.88rem; cursor:pointer; text-decoration:none; display:inline-block; }
+    .btn-green { background:var(--emerald); color:#FFF; }
+    .btn-gold { background:var(--gold); color:#FFF; }
+    .offer-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px; }
+    .offer { border:1px solid var(--border); border-radius:12px; padding:16px; background:#FFF; }
+    .offer.hi { border:2px solid var(--emerald); }
+    .price { font-size:1.4rem; font-weight:900; color:var(--emerald); margin:6px 0; }
+  </style>
+</head>
+<body>
+  <div class="top">
+    <div class="brand">እቁብ-መዝገብ · EqubLedger <span style="opacity:.8;font-weight:500;">by Tinso</span></div>
+    <div class="langs">
+      <button class="active" data-l="am">አማርኛ</button>
+      <button data-l="en">English</button>
+      <button data-l="it">Italiano</button>
+    </div>
+  </div>
+
+  <main class="wrap">
+    <section class="card">
+      <h1 id="tTitle">የእቁብ ገንዘብ ማስያ እና የፍትሃዊነት መዝገብ (EqubLedger)</h1>
+      <p class="sub" id="tSub">Built on Ethiopian ROSCA sociology: calculate exact Equb payouts, inflation/FX fairness between Round #1 and the final round, and copy a WhatsApp-ready schedule in 1 tap.</p>
+
+      <div class="grid">
+        <div>
+          <label for="cur">Currency / ገንዘብ</label>
+          <select id="cur">
+            <option value="ETB" selected>ETB (ብር)</option>
+            <option value="EUR">EUR (€ — Diaspora)</option>
+            <option value="USD">USD ($ — Diaspora)</option>
+          </select>
+        </div>
+        <div>
+          <label for="members">Members / አባላት</label>
+          <input type="number" id="members" value="12" min="2" max="50" />
+        </div>
+        <div>
+          <label for="contrib">Contribution / መዋጮ</label>
+          <input type="number" id="contrib" value="10000" min="10" step="100" />
+        </div>
+        <div>
+          <label for="infl">Annual Inflation / FX Drift (%)</label>
+          <input type="number" id="infl" value="18" min="0" max="60" step="1" />
+        </div>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi">
+          <div class="kpi-k">Total Payout / ዙር</div>
+          <div class="kpi-v" id="kPool">120,000 ETB</div>
+        </div>
+        <div class="kpi warn">
+          <div class="kpi-k">Last-Round Real Value</div>
+          <div class="kpi-v" id="kReal">101,695 ETB</div>
+        </div>
+        <div class="kpi warn">
+          <div class="kpi-k">First vs. Last Fairness Gap</div>
+          <div class="kpi-v" id="kGap">-15.3%</div>
+        </div>
+      </div>
+
+      <div class="btns">
+        <button class="btn btn-green" id="btnCopyWA">📋 Copy WhatsApp / Telegram Schedule</button>
+        <button class="btn btn-gold" onclick="window.print()">🖨️ Print / Save PDF</button>
+      </div>
+
+      <table>
+        <thead>
+          <tr><th>Round</th><th>Nominal Payout</th><th>Real Purchasing Power</th><th>Suggested Fair Bonus (Optional)</th></tr>
+        </thead>
+        <tbody id="schedBody"></tbody>
+      </table>
+    </section>
+
+    <section class="offer-grid">
+      <div class="offer">
+        <strong style="color:var(--gold);font-size:0.78rem;text-transform:uppercase;">Self-Serve Treasurer Kit</strong>
+        <h3 style="margin:4px 0;">Equb &amp; Diaspora Pro Ledger Pack</h3>
+        <div class="price">€19 <span style="font-size:0.8rem;color:var(--muted);font-weight:600;">one-time</span></div>
+        <p class="sub">Automated Google Sheets + Excel multi-currency Equb tracker (ETB/EUR/USD), bilingual Amharic/English member agreement, and late-payment reminder templates.</p>
+        <a href="https://blahspark15.gumroad.com/l/zwkrz" target="_blank" rel="noopener noreferrer" class="btn btn-gold" style="margin-top:12px;">Get Pro Ledger Pack (€19) →</a>
+      </div>
+
+      <div class="offer hi">
+        <strong style="color:var(--emerald);font-size:0.78rem;text-transform:uppercase;">B2B / Diaspora Association DFY</strong>
+        <h3 style="margin:4px 0;">Custom Branded Equb / Iddir Portal</h3>
+        <div class="price">€190 <span style="font-size:0.8rem;color:var(--muted);font-weight:600;">turnkey 48h setup</span></div>
+        <p class="sub">Need a private, transparent web ledger for your diaspora association, church group, or youth cooperative (Bologna, Milan, London, DC, Addis)?</p>
+        <form action="https://formspree.io/f/mljbwjre" method="POST" style="display:grid;gap:8px;margin-top:10px;">
+          <input type="hidden" name="source" value="EqubLedger DFY Setup" />
+          <input type="text" name="group_name" placeholder="Group / Association Name & City" required />
+          <input type="email" name="email" placeholder="Treasurer Email" required />
+          <button type="submit" class="btn btn-green">Request Custom Setup (€190) →</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const TEXT = {
+      am: {
+        title: "የእቁብ ገንዘብ ማስያ እና የፍትሃዊነት መዝገብ (EqubLedger)",
+        sub: "የእቁብ ዙር፣ የዋጋ ግሽበት ተጽዕኖ እና በWhatsApp/Telegram የሚጋራ ግልጽ ሰንጠረዥ በ1 ጠቅታ ያዘጋጁ።"
+      },
+      en: {
+        title: "EqubLedger — Transparent Equb Pool & Fairness Engine",
+        sub: "Calculate exact Equb payouts, real purchasing power between Round #1 and the final round, and copy a WhatsApp-ready schedule in 1 tap."
+      },
+      it: {
+        title: "EqubLedger — Calcolatore Equb & Equità Diaspora",
+        sub: "Calcola le quote Equb, il potere d'acquisto reale tra il 1° e l'ultimo turno e copia il calendario pronto per WhatsApp/Telegram."
+      }
+    };
+
+    let lastWA = "";
+    function calc() {
+      const cur = document.getElementById("cur").value;
+      const m = Math.max(2, parseInt(document.getElementById("members").value, 10) || 12);
+      const c = Math.max(10, parseFloat(document.getElementById("contrib").value) || 10000);
+      const infl = Math.max(0, parseFloat(document.getElementById("infl").value) || 0) / 100;
+      const pool = m * c;
+      const monthlyRate = infl / 12;
+
+      const lastReal = pool / Math.pow(1 + monthlyRate, m - 1);
+      const gapPct = ((lastReal - pool) / pool) * 100;
+
+      document.getElementById("kPool").textContent = `${Math.round(pool).toLocaleString()} ${cur}`;
+      document.getElementById("kReal").textContent = `${Math.round(lastReal).toLocaleString()} ${cur}`;
+      document.getElementById("kGap").textContent = `${gapPct.toFixed(1)}%`;
+
+      const rows = [];
+      const waLines = [`እቁብ-መዝገብ (EqubLedger) — ${m} Members × ${c.toLocaleString()} ${cur} = ${pool.toLocaleString()} ${cur}/round`];
+      for (let r = 1; r <= m; r++) {
+        const realVal = pool / Math.pow(1 + monthlyRate, r - 1);
+        const fairDiff = Math.max(0, Math.round(pool - realVal));
+        rows.push(`<tr><td>#${r}</td><td><strong>${Math.round(pool).toLocaleString()} ${cur}</strong></td><td>${Math.round(realVal).toLocaleString()} ${cur}</td><td>+${fairDiff.toLocaleString()} ${cur}</td></tr>`);
+        waLines.push(`Round #${r}: ${Math.round(pool).toLocaleString()} ${cur} (Real: ${Math.round(realVal).toLocaleString()} ${cur})`);
+      }
+      waLines.push("Powered by EqubLedger (Tinso)");
+      lastWA = waLines.join("\n");
+      document.getElementById("schedBody").innerHTML = rows.join("");
+    }
+
+    document.querySelectorAll(".langs button").forEach((b) => {
+      b.addEventListener("click", () => {
+        document.querySelectorAll(".langs button").forEach((x) => x.classList.remove("active"));
+        b.classList.add("active");
+        document.getElementById("tTitle").textContent = TEXT[b.dataset.l].title;
+        document.getElementById("tSub").textContent = TEXT[b.dataset.l].sub;
+      });
+    });
+
+    ["cur", "members", "contrib", "infl"].forEach((id) => {
+      document.getElementById(id).addEventListener("input", calc);
+      document.getElementById(id).addEventListener("change", calc);
+    });
+
+    document.getElementById("btnCopyWA").addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(lastWA);
+        document.getElementById("btnCopyWA").textContent = "✅ Copied for WhatsApp!";
+        setTimeout(() => (document.getElementById("btnCopyWA").textContent = "📋 Copy WhatsApp / Telegram Schedule"), 2000);
+      } catch {
+        alert(lastWA);
+      }
+    });
+
+    calc();
+  </script>
+</body>
+</html>
